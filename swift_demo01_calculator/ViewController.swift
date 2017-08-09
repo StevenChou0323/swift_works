@@ -87,7 +87,7 @@ class ViewController: UIViewController {
         self.view.addSubview(buttonTimes);
 
         //符號AC +/- % /
-        buttonPositionY = screenHeight - buttonHeight * 5 - space * 5;
+        buttonPositionY = screenHeight - buttonHeight * 5 - space * 5
 
         let buttonClean = CalculatorButton(frame: CGRect(x: space , y: buttonPositionY, width: buttonWidth, height: buttonHeight), title : "AC")
         self.view.addSubview(buttonClean);
@@ -100,7 +100,30 @@ class ViewController: UIViewController {
         self.view.addSubview(buttonPercentage);
         
         let buttonDivided = CalculatorButton(frame: CGRect(x: space + buttonPercentage.frame.origin.x + buttonPercentage.frame.size.width , y: buttonPositionY, width: buttonWidth, height: buttonHeight), title : "/")
-        self.view.addSubview(buttonDivided);
+        self.view.addSubview(buttonDivided)
+        
+        //計算機結果
+        buttonPositionY = screenHeight - buttonHeight * 6 - space * 6
+        
+        let labelResult = UILabel(frame: CGRect(x: space, y: buttonPositionY, width: buttonWidth * 4 + space * 3, height: buttonHeight))
+        self.view.addSubview(labelResult);
+        labelResult.text = "0"
+        labelResult.backgroundColor = .orange
+        
+        labelResult.font = UIFont(name: "Arial", size: 25)
+        labelResult.textAlignment = .right
+        labelResult.numberOfLines = 1
+        labelResult.lineBreakMode = .byTruncatingTail
+    
+        
+        let label = UILabel()
+        let stringValue = "0"
+        let attrString = NSMutableAttributedString(string: stringValue)
+        var style = NSMutableParagraphStyle()
+        style.lineSpacing = 24 // change line spacing between paragraph like 36 or 48
+        style.minimumLineHeight = 20 // change line spacing between each line like 30 or 40
+        attrString.addAttribute(NSParagraphStyleAttributeName, value: style, range: NSRange(location: 0, length: stringValue.characters.count))
+        label.attributedText = attrString
     }
 
     override func didReceiveMemoryWarning() {
