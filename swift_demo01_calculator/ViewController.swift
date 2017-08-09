@@ -114,16 +114,8 @@ class ViewController: UIViewController {
         labelResult.textAlignment = .right
         labelResult.numberOfLines = 1
         labelResult.lineBreakMode = .byTruncatingTail
-    
+
         
-        let label = UILabel()
-        let stringValue = "0"
-        let attrString = NSMutableAttributedString(string: stringValue)
-        var style = NSMutableParagraphStyle()
-        style.lineSpacing = 24 // change line spacing between paragraph like 36 or 48
-        style.minimumLineHeight = 20 // change line spacing between each line like 30 or 40
-        attrString.addAttribute(NSParagraphStyleAttributeName, value: style, range: NSRange(location: 0, length: stringValue.characters.count))
-        label.attributedText = attrString
     }
 
     override func didReceiveMemoryWarning() {
