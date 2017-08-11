@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		844A46261F3DE317008AD48D /* CalculatorLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844A46251F3DE317008AD48D /* CalculatorLabel.swift */; };
 		8461DB241F34B0F5004C3581 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8461DB231F34B0F5004C3581 /* AppDelegate.swift */; };
 		8461DB261F34B0F5004C3581 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8461DB251F34B0F5004C3581 /* ViewController.swift */; };
 		8461DB2B1F34B0F5004C3581 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8461DB2A1F34B0F5004C3581 /* Assets.xcassets */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		844A46251F3DE317008AD48D /* CalculatorLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorLabel.swift; sourceTree = "<group>"; };
 		8461DB201F34B0F5004C3581 /* swift_demo01_calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = swift_demo01_calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8461DB231F34B0F5004C3581 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8461DB251F34B0F5004C3581 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -56,6 +58,7 @@
 			children = (
 				8461DB231F34B0F5004C3581 /* AppDelegate.swift */,
 				84B85B411F34EE4000F8A792 /* CalculatorButton.swift */,
+				844A46251F3DE317008AD48D /* CalculatorLabel.swift */,
 				8461DB251F34B0F5004C3581 /* ViewController.swift */,
 				8461DB2A1F34B0F5004C3581 /* Assets.xcassets */,
 				8461DB2C1F34B0F5004C3581 /* LaunchScreen.storyboard */,
@@ -138,6 +141,7 @@
 			files = (
 				8461DB261F34B0F5004C3581 /* ViewController.swift in Sources */,
 				84B85B421F34EE4000F8A792 /* CalculatorButton.swift in Sources */,
+				844A46261F3DE317008AD48D /* CalculatorLabel.swift in Sources */,
 				8461DB241F34B0F5004C3581 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

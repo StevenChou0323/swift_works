@@ -105,17 +105,18 @@ class ViewController: UIViewController {
         //計算機結果
         buttonPositionY = screenHeight - buttonHeight * 6 - space * 6
         
-        let labelResult = UILabel(frame: CGRect(x: space, y: buttonPositionY, width: buttonWidth * 4 + space * 3, height: buttonHeight))
-        self.view.addSubview(labelResult);
-        labelResult.text = "0"
-        labelResult.backgroundColor = .orange
+        let labelResult = CalculatorLabel()
         
-        labelResult.font = UIFont(name: "Arial", size: 25)
+        labelResult.drawText(in : CGRect(x: space, y: buttonPositionY, width: buttonWidth*4 + space*3, height: buttonHeight))
+
+        labelResult.frame = CGRect(x: space, y: buttonPositionY, width: buttonWidth*4 + space*3, height: buttonHeight)
+        
         labelResult.textAlignment = .right
         labelResult.numberOfLines = 1
-        labelResult.lineBreakMode = .byTruncatingTail
-
-        
+        labelResult.backgroundColor = .orange
+        labelResult.text = "0"
+        labelResult.font = UIFont.systemFont(ofSize: 35)
+        self.view.addSubview(labelResult)
     }
 
     override func didReceiveMemoryWarning() {
