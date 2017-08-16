@@ -8,6 +8,8 @@
 
 import UIKit
 
+
+
 class ViewController: UIViewController {
 
     //計算機結果
@@ -131,11 +133,9 @@ class ViewController: UIViewController {
         self.view.addSubview(buttonPercentage);
         buttonPercentage.addTarget(nil, action: #selector(self.clickSignInNumberButton(sender:)), for: .touchUpInside)
         
-        
         let buttonDivided = CalculatorButton(frame: CGRect(x: space + buttonPercentage.frame.origin.x + buttonPercentage.frame.size.width , y: buttonPositionY, width: buttonWidth, height: buttonHeight), title : "÷")
         self.view.addSubview(buttonDivided)
         buttonDivided.addTarget(nil, action: #selector(self.clickSignButton(sender:)), for: .touchUpInside)
-        
         
         buttonPositionY = screenHeight - buttonHeight * 6 - space * 6
         
@@ -162,23 +162,16 @@ class ViewController: UIViewController {
         sender.backgroundColor = UIColor.lightGray
         let buttonTitle = sender.titleLabel?.text
 
+        //防止0開頭的數字
+        if labelResult.text == "0" && buttonTitle == "0"{
+            return;
+        }
+        
         if isExistSign == true {
             calculatorRight += buttonTitle!
-            let index = calculatorRight.index(calculatorRight.startIndex, offsetBy: 0)
-            if calculatorRight[index] == "0"{
-                calculatorRight = ""
-                return;
-            }
-            
             labelResult.text = calculatorRight
         }else{
             calculatorLeft += buttonTitle!
-            let index = calculatorLeft.index(calculatorLeft.startIndex, offsetBy: 0)
-            if calculatorLeft[index] == "0"{
-                calculatorLeft = ""
-                return;
-            }
-            
             labelResult.text = calculatorLeft
         }
     }
@@ -186,13 +179,75 @@ class ViewController: UIViewController {
     func clickSignInNumberButton( sender : UIButton) {
         let sign = sender.titleLabel?.text
         let signStirng = sign!
+        sender.backgroundColor = UIColor.lightGray
+        
         switch signStirng{
             case "AC":
                 reset()
+            case "∙":
+                //防止數字有很多小數點的情形發生
+                if labelResult.text?.range(of:".") != nil {
+                    return;
+                }
+                if isExistSign == true{
+                    calculatorRight += "."
+                    if calculatorRight.characters.count == 1{
+                        calculatorRight = "0."
+                    }
+                    labelResult.text = calculatorRight
+                }else{
+                    calculatorLeft += "."
+                    if calculatorLeft.characters.count == 1{
+                        calculatorLeft = "0."
+                    }
+                    labelResult.text = calculatorLeft
+                }
+            case "±":
+                
+                //防止0開頭
+                if labelResult.text == "0"{
+                    return
+                }
+                
+                if labelResult.text?.range(of:"-") == nil{
+                    if isExistSign == true {
+                        calculatorRight.insert("-", at: calculatorRight.startIndex)
+                        labelResult.text = calculatorRight
+                    }else{
+                        calculatorLeft.insert("-", at: calculatorRight.startIndex)
+                        labelResult.text = calculatorLeft
+                    }
+                }else{
+                    if isExistSign == true {
+                        if(calculatorRight.contains("-")){
+                            calculatorRight.remove(at: calculatorRight.startIndex)
+                            labelResult.text = calculatorRight
+                        }
+                    }else{
+                        if(calculatorLeft.contains("-")){
+                            calculatorLeft.remove(at: calculatorLeft.startIndex)
+                            labelResult.text = calculatorLeft
+                        }
+                    }
+                }
+            
+            case "%":
+            
+                let oldString = labelResult.text
+                let newValue = Double(oldString!)! / 100.0
+                let newString:String = String(newValue)
+                print(newString)
+                if isExistSign == true{
+                    calculatorRight = newString
+                    labelResult.text = calculatorRight
+                }else{
+                    calculatorLeft = newString
+                    labelResult.text = calculatorLeft
+                }
             default:
-                print("aaaaaa")
+                break
         }
-        sender.backgroundColor = UIColor.lightGray
+    
     }
     
     func clickSignButton(sender : UIButton){
