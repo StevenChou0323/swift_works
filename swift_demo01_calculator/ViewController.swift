@@ -4,19 +4,13 @@
 //
 //  Created by 周建宏 on 2017/8/4.
 //  Copyright © 2017年 周建宏. All rights reserved.
-//
 
 import UIKit
 
-
-
 class ViewController: UIViewController {
-
+    
     //計算機結果
     var labelResult = CalculatorLabel()
-    
-    //是否要計算結果
-    var isCalculatedResult = false
     
     //是否存在符號
     var isExistSign  = false
@@ -50,7 +44,7 @@ class ViewController: UIViewController {
         buttonZero.contentVerticalAlignment = .center
         buttonZero.contentHorizontalAlignment = .left
         buttonZero.titleEdgeInsets = UIEdgeInsetsMake(0, buttonWidth / 2, 0.0, 0.0)
-        self.view.addSubview(buttonZero);
+        self.view.addSubview(buttonZero)
         buttonZero.addTarget(nil, action: #selector(self.clickNumberButton(sender:)), for: .touchUpInside)
         
         let buttonPoint = CalculatorButton(frame: CGRect(x: space + buttonZero.frame.origin.x + buttonZero.frame.size.width, y: buttonPositionY, width: buttonWidth, height: buttonHeight), title : "∙")
@@ -159,6 +153,7 @@ class ViewController: UIViewController {
     }
     
     func clickNumberButton( sender : UIButton) {
+        
         sender.backgroundColor = UIColor.lightGray
         let buttonTitle = sender.titleLabel?.text
 
@@ -174,69 +169,79 @@ class ViewController: UIViewController {
             calculatorLeft += buttonTitle!
             labelResult.text = calculatorLeft
         }
+        
     }
     
     func clickSignInNumberButton( sender : UIButton) {
+        sender.backgroundColor = UIColor.lightGray
         let sign = sender.titleLabel?.text
         let signStirng = sign!
-        sender.backgroundColor = UIColor.lightGray
-        
+       
         switch signStirng{
+            
             case "AC":
                 reset()
+            
             case "∙":
                 //防止數字有很多小數點的情形發生
                 if labelResult.text?.range(of:".") != nil {
-                    return;
+                    return
                 }
+                if(labelResult.text == "0"){
+                    if isExistSign == true{
+                        calculatorRight = "0"
+                    }else{
+                        calculatorLeft = "0"
+                    }
+                }
+                
                 if isExistSign == true{
                     calculatorRight += "."
-                    if calculatorRight.characters.count == 1{
-                        calculatorRight = "0."
-                    }
                     labelResult.text = calculatorRight
                 }else{
                     calculatorLeft += "."
-                    if calculatorLeft.characters.count == 1{
-                        calculatorLeft = "0."
-                    }
                     labelResult.text = calculatorLeft
                 }
             case "±":
                 
-                //防止0開頭
-                if labelResult.text == "0"{
-                    return
-                }
-                
-                if labelResult.text?.range(of:"-") == nil{
-                    if isExistSign == true {
-                        calculatorRight.insert("-", at: calculatorRight.startIndex)
-                        labelResult.text = calculatorRight
+                    let isNegativeSignExist = labelResult.text?.hasPrefix("-")
+                    if isNegativeSignExist == true{
+                        labelResult.text?.remove(at: (labelResult.text?.startIndex)!)
                     }else{
-                        calculatorLeft.insert("-", at: calculatorRight.startIndex)
-                        labelResult.text = calculatorLeft
+                        labelResult.text?.insert("-", at: (labelResult.text?.startIndex)!)
                     }
-                }else{
-                    if isExistSign == true {
-                        if(calculatorRight.contains("-")){
-                            calculatorRight.remove(at: calculatorRight.startIndex)
-                            labelResult.text = calculatorRight
-                        }
+                    
+                    if isExistSign == true{
+                        calculatorRight = labelResult.text!
                     }else{
-                        if(calculatorLeft.contains("-")){
-                            calculatorLeft.remove(at: calculatorLeft.startIndex)
-                            labelResult.text = calculatorLeft
-                        }
+                        calculatorLeft = labelResult.text!
                     }
-                }
             
             case "%":
             
                 let oldString = labelResult.text
-                let newValue = Double(oldString!)! / 100.0
-                let newString:String = String(newValue)
-                print(newString)
+                let newDoubleValue = Double(oldString!)! / 100.0
+                var newString:String = String(newDoubleValue)
+                var newArray = Array(newString.characters)
+                
+                var isConvertDoubleToInt = false
+                if let dotIndex = newArray.index(of: "."){
+                    var startIndex = dotIndex + 1
+                    for i in startIndex..<newArray.count{
+                        if newArray[i] == "0"{
+                            isConvertDoubleToInt = true
+                        }else{
+                            isConvertDoubleToInt = false
+                            break
+                        }
+                    }
+                }
+                
+                if isConvertDoubleToInt == true{
+                    let newIntSting = Int(newDoubleValue)
+                    newString = String(newIntSting)
+                }
+                
                 if isExistSign == true{
                     calculatorRight = newString
                     labelResult.text = calculatorRight
@@ -251,8 +256,31 @@ class ViewController: UIViewController {
     }
     
     func clickSignButton(sender : UIButton){
-        print("clickSignButton")
         sender.backgroundColor = UIColor.orange
+        let sign = sender.titleLabel?.text
+        let signStirng = sign!
+        
+        switch signStirng {
+            case "=":
+                print("test")
+            case "+":
+                 isExistSign = true
+                 print("+")
+            case "×":
+                isExistSign = true
+
+             print("×")
+            case "−":
+                isExistSign = true
+
+             print("−")
+            case "÷":
+                isExistSign = true
+
+             print("÷")
+            default:
+                break;
+            }
     }
     
     func reset() {
@@ -260,10 +288,8 @@ class ViewController: UIViewController {
         calculatorRight = ""
         calculatorSign = ""
         labelResult.text = "0"
-        isCalculatedResult = false
         isExistSign  = false
         calculatorArray  = []
     }
-
 }
 
