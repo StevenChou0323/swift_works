@@ -12,22 +12,24 @@ class ViewController: UIViewController {
     //計算機結果
     var labelResult = CalculatorLabel()
     
+    var isExistLeft = false
+    
     //是否存在符號
     var isExistSign  = false
     
+    var isExistRight = false
+    
     //暫存運算式左邊數字
-    var calculatorLeft  = ""
+    var calculatorLeft  = 0.0
     
     //暫存運算式右邊數字
-    var calculatorRight = ""
+    var calculatorRight = 0.0
     
     //暫存運算中間符號
     var calculatorSign = ""
     
-    //運算式
-    var calculatorArray  = [String]()
-    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         let screenSize = UIScreen.main.bounds.size
@@ -53,7 +55,7 @@ class ViewController: UIViewController {
         
         let buttonEqual = CalculatorButton(frame: CGRect(x: space + buttonPoint.frame.origin.x + buttonPoint.frame.size.width, y: buttonPositionY, width: buttonWidth, height: buttonHeight), title : "=")
         self.view.addSubview(buttonEqual);
-        buttonEqual.addTarget(nil, action: #selector(self.clickSignButton(sender:)), for: .touchUpInside)
+        buttonEqual.addTarget(nil, action: #selector(self.clickResultButton(sender:)), for: .touchUpInside)
         
         //數字123 符號+
         buttonPositionY = screenHeight - buttonHeight * 2 - space * 2;
@@ -157,19 +159,26 @@ class ViewController: UIViewController {
         sender.backgroundColor = UIColor.lightGray
         let buttonTitle = sender.titleLabel?.text
 
-        //防止0開頭的數字
-        if labelResult.text == "0" && buttonTitle == "0"{
-            return;
+        if isExistLeft == true && isExistSign == true && isExistRight == false{
+            labelResult.text = "0"
         }
+        
+        var currentText = labelResult.text
+        currentText! += buttonTitle!
+        
+        let convertText = self.convertStringToIntOrDoubleString(StringNum: currentText!)
         
         if isExistSign == true {
-            calculatorRight += buttonTitle!
-            labelResult.text = calculatorRight
+            labelResult.text = convertText
+            calculatorRight = Double(convertText)!
+            isExistRight = true
         }else{
-            calculatorLeft += buttonTitle!
-            labelResult.text = calculatorLeft
+            labelResult.text = convertText
+            calculatorLeft = Double(convertText)!
+            isExistLeft = true
         }
         
+        print(" clickNumberButton \(calculatorLeft) \(calculatorSign) \(calculatorRight)")
     }
     
     func clickSignInNumberButton( sender : UIButton) {
@@ -183,27 +192,33 @@ class ViewController: UIViewController {
                 reset()
             
             case "∙":
-                //防止數字有很多小數點的情形發生
-                if labelResult.text?.range(of:".") != nil {
+              
+                if isExistLeft == true && isExistSign == true && isExistRight == false{
+                    labelResult.text = "0"
+                }
+                
+                //防止數字有很多小數點的情形
+                if labelResult.text?.range(of: ".") != nil{
                     return
+                }else{
+                   labelResult.text? += "."
                 }
-                if(labelResult.text == "0"){
-                    if isExistSign == true{
-                        calculatorRight = "0"
-                    }else{
-                        calculatorLeft = "0"
-                    }
-                }
+                
+              
                 
                 if isExistSign == true{
-                    calculatorRight += "."
-                    labelResult.text = calculatorRight
+                    calculatorRight = Double(labelResult.text!)!
+                    isExistRight = true
                 }else{
-                    calculatorLeft += "."
-                    labelResult.text = calculatorLeft
+                    calculatorLeft = Double(labelResult.text!)!
+                    isExistLeft = true
                 }
+            
             case "±":
                 
+                    if isExistLeft == true && isExistSign == true && isExistRight == false{
+                        labelResult.text = "0"
+                    }
                     let isNegativeSignExist = labelResult.text?.hasPrefix("-")
                     if isNegativeSignExist == true{
                         labelResult.text?.remove(at: (labelResult.text?.startIndex)!)
@@ -212,9 +227,11 @@ class ViewController: UIViewController {
                     }
                     
                     if isExistSign == true{
-                        calculatorRight = labelResult.text!
+                        calculatorRight = Double(labelResult.text!)!
+                        isExistRight = true
                     }else{
-                        calculatorLeft = labelResult.text!
+                        calculatorLeft = Double(labelResult.text!)!
+                        isExistLeft = true
                     }
             
             case "%":
@@ -243,15 +260,20 @@ class ViewController: UIViewController {
                 }
                 
                 if isExistSign == true{
-                    calculatorRight = newString
-                    labelResult.text = calculatorRight
+                    calculatorRight = Double(newString)!
+                    labelResult.text = newString
+                    isExistRight = true
                 }else{
-                    calculatorLeft = newString
-                    labelResult.text = calculatorLeft
+                    calculatorLeft = Double(newString)!
+                    labelResult.text = newString
+                    isExistLeft = true
                 }
+            
             default:
                 break
         }
+        
+        print(" clickSignInNumberButton \(calculatorLeft) \(calculatorSign) \(calculatorRight)")
     
     }
     
@@ -259,37 +281,114 @@ class ViewController: UIViewController {
         sender.backgroundColor = UIColor.orange
         let sign = sender.titleLabel?.text
         let signStirng = sign!
-        
+        if isExistRight == true{
+            var result = self.calculatorResult()
+            // labelResult.text = result
+//                        calculatorLeft = result
+//                        calculatorRight = 0.0
+//                        calculatorSign = ""
+//                        isExistLeft = true
+//                        isExistSign  = false
+//                        isExistRight = false
+        }
         switch signStirng {
-            case "=":
-                print("test")
+            
             case "+":
                  isExistSign = true
-                 print("+")
+                 calculatorSign = "+"
+            
             case "×":
                 isExistSign = true
-
-             print("×")
+                calculatorSign = "×"
+            
             case "−":
                 isExistSign = true
-
-             print("−")
+                calculatorSign = "−"
+            
             case "÷":
                 isExistSign = true
-
-             print("÷")
+                calculatorSign = "÷"
+            
             default:
                 break;
-            }
+        }
+        
     }
     
+    func convertStringToIntOrDoubleString(StringNum : String ) -> String{
+        let oldString = StringNum
+        let newDoubleValue = Double(oldString)!
+        var newString:String = String(newDoubleValue)
+        var newArray = Array(newString.characters)
+        
+        var isConvertDoubleToInt = false
+        if let dotIndex = newArray.index(of: "."){
+            var startIndex = dotIndex + 1
+            for i in startIndex..<newArray.count{
+                if newArray[i] == "0"{
+                    isConvertDoubleToInt = true
+                }else{
+                    isConvertDoubleToInt = false
+                    break
+                }
+            }
+        }
+        
+        if isConvertDoubleToInt == true{
+            let newIntSting = Int(newDoubleValue)
+            newString = String(newIntSting)
+        }
+        return newString
+    }
+    
+    func calculatorResult()-> String{
+   
+        var doubleResult = 0.0
+        switch calculatorSign {
+            case "+":
+                doubleResult = calculatorLeft + calculatorRight
+                
+            case "×":
+                doubleResult = calculatorLeft * calculatorRight
+            
+            case "−":
+                doubleResult = calculatorLeft - calculatorRight
+            
+            case "÷":
+                doubleResult = calculatorLeft / calculatorRight
+            
+            default:
+                break
+        }
+//
+        print("doubleResult \(doubleResult)")
+        return "hi"
+    }
+    
+    
     func reset() {
-        calculatorLeft = ""
-        calculatorRight = ""
+        calculatorLeft = 0.0
+        calculatorRight = 0.0
         calculatorSign = ""
-        labelResult.text = "0"
+        isExistLeft = false
         isExistSign  = false
-        calculatorArray  = []
+        isExistRight = false
+        labelResult.text = "0"
+    }
+    
+    func clickResultButton(sender : UIButton){
+        sender.backgroundColor = UIColor.orange
+        if isExistRight == true{
+            var result = self.calculatorResult()
+//            var convertResult = self.convertStringToIntOrDoubleString(StringNum: result)
+//            labelResult.text = convertResult
+//         //   calculatorLeft = convertResult
+//            calculatorRight = 0.0
+//            calculatorSign = ""
+//            isExistLeft = true
+//            isExistSign  = false
+//            isExistRight = false
+        }
     }
 }
 
