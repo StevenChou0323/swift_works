@@ -204,8 +204,6 @@ class ViewController: UIViewController {
                    labelResult.text? += "."
                 }
                 
-              
-                
                 if isExistSign == true{
                     calculatorRight = Double(labelResult.text!)!
                     isExistRight = true
@@ -282,14 +280,20 @@ class ViewController: UIViewController {
         let sign = sender.titleLabel?.text
         let signStirng = sign!
         if isExistRight == true{
-            var result = self.calculatorResult()
-            // labelResult.text = result
-//                        calculatorLeft = result
-//                        calculatorRight = 0.0
-//                        calculatorSign = ""
-//                        isExistLeft = true
-//                        isExistSign  = false
-//                        isExistRight = false
+            let result = self.calculatorResult()
+            let convertResult = self.convertStringToIntOrDoubleString(StringNum: result.originalString)
+            print("convertResult \(convertResult)")
+            if convertResult == "inf"{
+                labelResult.text = "錯誤"
+            }else{
+                labelResult.text = convertResult
+            }
+            calculatorLeft = result.originalDouble
+            calculatorRight = 0.0
+            calculatorSign = ""
+            isExistLeft = true
+            isExistSign  = false
+            isExistRight = false
         }
         switch signStirng {
             
@@ -341,7 +345,7 @@ class ViewController: UIViewController {
         return newString
     }
     
-    func calculatorResult()-> String{
+    func calculatorResult()-> (originalString : String, originalDouble: Double){
    
         var doubleResult = 0.0
         switch calculatorSign {
@@ -360,9 +364,11 @@ class ViewController: UIViewController {
             default:
                 break
         }
-//
+        
         print("doubleResult \(doubleResult)")
-        return "hi"
+        print(String(doubleResult))
+        
+        return (String(doubleResult),doubleResult)
     }
     
     
@@ -379,15 +385,20 @@ class ViewController: UIViewController {
     func clickResultButton(sender : UIButton){
         sender.backgroundColor = UIColor.orange
         if isExistRight == true{
-            var result = self.calculatorResult()
-//            var convertResult = self.convertStringToIntOrDoubleString(StringNum: result)
-//            labelResult.text = convertResult
-//         //   calculatorLeft = convertResult
-//            calculatorRight = 0.0
-//            calculatorSign = ""
-//            isExistLeft = true
-//            isExistSign  = false
-//            isExistRight = false
+            let result = self.calculatorResult()
+            let convertResult = self.convertStringToIntOrDoubleString(StringNum: result.originalString)
+            print("convertResult \(convertResult)")
+            if convertResult == "inf"{
+                labelResult.text = "錯誤"
+            }else{
+                  labelResult.text = convertResult
+            }
+              calculatorLeft = result.originalDouble
+              calculatorRight = 0.0
+              calculatorSign = ""
+              isExistLeft = true
+              isExistSign  = false
+              isExistRight = false
         }
     }
 }
