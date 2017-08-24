@@ -9,14 +9,15 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    //計算機結果
-    var labelResult = CalculatorLabel()
+    //計算結果
+    var labelResult = UILabel()
     
+    //是否存在左邊數字
     var isExistLeft = false
     
     //是否存在符號
     var isExistSign  = false
-    
+    //是否存在右邊數字
     var isExistRight = false
     
     //暫存運算式左邊數字
@@ -27,6 +28,9 @@ class ViewController: UIViewController {
     
     //暫存運算中間符號
     var calculatorSign = ""
+    
+    //顯示最多9個數字
+    var LIMIT_CHAR_COUNT = 9
     
     override func viewDidLoad() {
         
@@ -135,17 +139,17 @@ class ViewController: UIViewController {
         
         buttonPositionY = screenHeight - buttonHeight * 6 - space * 6
         
-        labelResult.drawText(in : CGRect(x: space, y: buttonPositionY, width: buttonWidth*4 + space*3, height: buttonHeight))
 
-        labelResult.frame = CGRect(x: space, y: buttonPositionY, width: buttonWidth*4 + space*3, height: buttonHeight)
+        labelResult.frame = CGRect(x: space, y: buttonPositionY, width: buttonWidth * 4 + space * 4, height: buttonHeight)
         
         labelResult.textAlignment = .right
-        labelResult.numberOfLines = 1
         labelResult.textColor = UIColor.white
         labelResult.backgroundColor = UIColor.black
         labelResult.text = "0"
-        labelResult.lineBreakMode = .byTruncatingTail
-        labelResult.font = UIFont.systemFont(ofSize: 35)
+        labelResult.minimumScaleFactor = 0.85
+        labelResult.numberOfLines = 1
+        labelResult.adjustsFontSizeToFitWidth = true
+        labelResult.font = UIFont.systemFont(ofSize: 50)
         self.view.addSubview(labelResult)
     }
 
@@ -159,9 +163,12 @@ class ViewController: UIViewController {
         sender.backgroundColor = UIColor.lightGray
         let buttonTitle = sender.titleLabel?.text
 
+       
         if isExistLeft == true && isExistSign == true && isExistRight == false{
             labelResult.text = "0"
         }
+        
+        self.limitLabelText(offSet: self.LIMIT_CHAR_COUNT)
         
         var currentText = labelResult.text
         currentText! += buttonTitle!
@@ -178,6 +185,7 @@ class ViewController: UIViewController {
             isExistLeft = true
         }
         
+        
         print(" clickNumberButton \(calculatorLeft) \(calculatorSign) \(calculatorRight)")
     }
     
@@ -192,7 +200,11 @@ class ViewController: UIViewController {
                 reset()
             
             case "∙":
-              
+                //如果數字沒有<9個數字(意思就是>=9個數字) return
+                guard (labelResult.text?.characters.count)! < 9 else{
+                    return;
+                }
+                
                 if isExistLeft == true && isExistSign == true && isExistRight == false{
                     labelResult.text = "0"
                 }
@@ -214,6 +226,9 @@ class ViewController: UIViewController {
             
             case "±":
                 
+                    if labelResult.text! == "inf"{
+                       return
+                    }
                     if isExistLeft == true && isExistSign == true && isExistRight == false{
                         labelResult.text = "0"
                     }
@@ -235,6 +250,9 @@ class ViewController: UIViewController {
             case "%":
             
                 let oldString = labelResult.text
+                if oldString == "inf"{
+                    return
+                }
                 let newDoubleValue = Double(oldString!)! / 100.0
                 var newString:String = String(newDoubleValue)
                 var newArray = Array(newString.characters)
@@ -391,14 +409,24 @@ class ViewController: UIViewController {
             if convertResult == "inf"{
                 labelResult.text = "錯誤"
             }else{
-                  labelResult.text = convertResult
+                    labelResult.text = convertResult
             }
-              calculatorLeft = result.originalDouble
-              calculatorRight = 0.0
-              calculatorSign = ""
-              isExistLeft = true
-              isExistSign  = false
-              isExistRight = false
+            
+            calculatorLeft = result.originalDouble
+            calculatorRight = 0.0
+            calculatorSign = ""
+            isExistLeft = true
+            isExistSign  = false
+            isExistRight = false
+        }
+    }
+    
+    func limitLabelText(offSet:Int){
+        if (labelResult.text?.characters.count)! >= offSet {
+            var indexSub = labelResult.text?.index((labelResult.text?.startIndex)! , offsetBy: (offSet - 1))
+            var newString = labelResult.text?.substring(to: indexSub!)
+            labelResult.text? = newString!
+            return
         }
     }
 }
