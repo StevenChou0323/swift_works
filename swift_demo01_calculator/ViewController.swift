@@ -21,10 +21,10 @@ class ViewController: UIViewController {
     var isExistRight = false
     
     //暫存運算式左邊數字
-    var calculatorLeft  = 0.0
+    var calculatorLeft : Float = 0.0
     
     //暫存運算式右邊數字
-    var calculatorRight = 0.0
+    var calculatorRight : Float = 0.0
     
     //暫存運算中間符號
     var calculatorSign = ""
@@ -177,11 +177,11 @@ class ViewController: UIViewController {
         
         if isExistSign == true {
             labelResult.text = convertText
-            calculatorRight = Double(convertText)!
+            calculatorRight = Float(convertText)!
             isExistRight = true
         }else{
             labelResult.text = convertText
-            calculatorLeft = Double(convertText)!
+            calculatorLeft = Float(convertText)!
             isExistLeft = true
         }
         
@@ -217,10 +217,10 @@ class ViewController: UIViewController {
                 }
                 
                 if isExistSign == true{
-                    calculatorRight = Double(labelResult.text!)!
+                    calculatorRight = Float(labelResult.text!)!
                     isExistRight = true
                 }else{
-                    calculatorLeft = Double(labelResult.text!)!
+                    calculatorLeft = Float(labelResult.text!)!
                     isExistLeft = true
                 }
             
@@ -240,10 +240,10 @@ class ViewController: UIViewController {
                     }
                     
                     if isExistSign == true{
-                        calculatorRight = Double(labelResult.text!)!
+                        calculatorRight = Float(labelResult.text!)!
                         isExistRight = true
                     }else{
-                        calculatorLeft = Double(labelResult.text!)!
+                        calculatorLeft = Float(labelResult.text!)!
                         isExistLeft = true
                     }
             
@@ -276,11 +276,11 @@ class ViewController: UIViewController {
                 }
                 
                 if isExistSign == true{
-                    calculatorRight = Double(newString)!
+                    calculatorRight = Float(newString)!
                     labelResult.text = newString
                     isExistRight = true
                 }else{
-                    calculatorLeft = Double(newString)!
+                    calculatorLeft = Float(newString)!
                     labelResult.text = newString
                     isExistLeft = true
                 }
@@ -363,30 +363,31 @@ class ViewController: UIViewController {
         return newString
     }
     
-    func calculatorResult()-> (originalString : String, originalDouble: Double){
+    func calculatorResult() -> (originalString : String, originalDouble: Float){
    
-        var doubleResult = 0.0
+    
+        var floatResult : Float = 0.0;
         switch calculatorSign {
             case "+":
-                doubleResult = calculatorLeft + calculatorRight
+                floatResult = calculatorLeft + calculatorRight
                 
             case "×":
-                doubleResult = calculatorLeft * calculatorRight
+                floatResult = calculatorLeft * calculatorRight
             
             case "−":
-                doubleResult = calculatorLeft - calculatorRight
+                floatResult = calculatorLeft - calculatorRight
             
             case "÷":
-                doubleResult = calculatorLeft / calculatorRight
+                floatResult = calculatorLeft / calculatorRight
             
             default:
                 break
         }
         
-        print("doubleResult \(doubleResult)")
-        print(String(doubleResult))
+        print("floatResult \(floatResult)")
+        print(String(floatResult))
         
-        return (String(doubleResult),doubleResult)
+        return (String(floatResult),floatResult)
     }
     
     
