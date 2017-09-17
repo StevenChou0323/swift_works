@@ -168,7 +168,12 @@ class ViewController: UIViewController {
             labelResult.text = "0"
         }
         
-        self.limitLabelText(offSet: self.LIMIT_CHAR_COUNT)
+        if (labelResult.text?.characters.count)! >= self.LIMIT_CHAR_COUNT {
+            let indexSub = labelResult.text?.index((labelResult.text?.startIndex)! , offsetBy: (self.LIMIT_CHAR_COUNT))
+            var newString = labelResult.text?.substring(to: indexSub!)
+            labelResult.text? = newString!
+            return;
+        }
         
         var currentText = labelResult.text
         currentText! += buttonTitle!
@@ -385,8 +390,7 @@ class ViewController: UIViewController {
         }
         
         print("floatResult \(floatResult)")
-        print(String(floatResult))
-        
+       
         return (String(floatResult),floatResult)
     }
     
@@ -419,15 +423,6 @@ class ViewController: UIViewController {
             isExistLeft = true
             isExistSign  = false
             isExistRight = false
-        }
-    }
-    
-    func limitLabelText(offSet:Int){
-        if (labelResult.text?.characters.count)! >= offSet {
-            var indexSub = labelResult.text?.index((labelResult.text?.startIndex)! , offsetBy: (offSet - 1))
-            var newString = labelResult.text?.substring(to: indexSub!)
-            labelResult.text? = newString!
-            return
         }
     }
 }
